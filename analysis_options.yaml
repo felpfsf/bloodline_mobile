@@ -1,0 +1,14 @@
+include: package:flutter_lints/flutter.yaml
+
+formatter:
+  page_width: 80
+  trailing_commas: preserve
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+
+linter:
+  rules:
