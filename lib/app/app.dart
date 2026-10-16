@@ -1,3 +1,4 @@
+import 'package:bloodline_mobile/app/router/app_router.dart';
 import 'package:flutter/material.dart';
 
 class BloodlineApp extends StatelessWidget {
@@ -5,28 +6,16 @@ class BloodlineApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Project Bloodline',
+      debugShowCheckedModeBanner: false,
+      routerConfig: appRouter,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF8F263A),
           brightness: Brightness.dark,
         ),
         scaffoldBackgroundColor: const Color(0xFF101016),
-      ),
-      home: const Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: Text(
-              'PROJECT BLOODLINE',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }
