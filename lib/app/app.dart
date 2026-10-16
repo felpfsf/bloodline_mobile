@@ -1,4 +1,5 @@
 import 'package:bloodline_mobile/app/router/app_router.dart';
+import 'package:bloodline_mobile/core/design_system/theme/bloodline_theme.dart';
 import 'package:flutter/material.dart';
 
 class BloodlineApp extends StatelessWidget {
@@ -10,13 +11,7 @@ class BloodlineApp extends StatelessWidget {
       title: 'Project Bloodline',
       debugShowCheckedModeBanner: false,
       routerConfig: appRouter,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF8F263A),
-          brightness: Brightness.dark,
-        ),
-        scaffoldBackgroundColor: const Color(0xFF101016),
-      ),
+      theme: BloodlineTheme.dark,
     );
   }
 }

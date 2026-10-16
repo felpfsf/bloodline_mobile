@@ -15,16 +15,15 @@ class WelcomePage extends StatelessWidget {
             children: [
               Text(
                 'PROJECT BLOODLINE',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                ),
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 24),
               FilledButton(
                 onPressed: () => context.pushNamed('login'),
-                child: const Text('Entrar'),
+                child: Text(
+                  'Entrar',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               ),
             ],
           ),

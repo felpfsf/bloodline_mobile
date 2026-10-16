@@ -9,8 +9,10 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Login'),
       ),
-      body: Center(
-        child: Text('LOGIN --- Em breve'),
+      body: SafeArea(
+        child: Center(
+          child: Text('LOGIN --- Em breve'),
+        ),
       ),
     );
   }
