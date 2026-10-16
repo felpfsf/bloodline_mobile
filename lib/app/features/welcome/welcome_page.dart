@@ -1,3 +1,4 @@
+import 'package:bloodline_mobile/core/design_system/widgets/bloodline_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,6 +17,13 @@ class WelcomePage extends StatelessWidget {
               Text(
                 'PROJECT BLOODLINE',
                 style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(height: 24),
+              BloodlinePanel(
+                child: Text(
+                  'A noite pertence aos que sobrevivem!',
+                  textAlign: TextAlign.center,
+                ),
               ),
               const SizedBox(height: 24),
               FilledButton(
