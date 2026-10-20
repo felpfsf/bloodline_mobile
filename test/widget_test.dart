@@ -49,7 +49,7 @@ void main() {
       );
 
       await tester.tap(
-        find.byKey(const Key('login_submit')),
+        find.byKey(const Key('login_button')),
       );
 
       await tester.pump();
