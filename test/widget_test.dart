@@ -2,6 +2,7 @@ import 'package:bloodline_mobile/app/app.dart';
 import 'package:bloodline_mobile/app/features/identity/domain/models/auth_session.dart';
 import 'package:bloodline_mobile/app/features/identity/domain/repository/login_repository.dart';
 import 'package:bloodline_mobile/app/features/identity/domain/repository/session_store.dart';
+import 'package:bloodline_mobile/app/features/identity/presentation/cubit/session_cubit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -20,7 +21,7 @@ final class FakeLoginRepository implements ILoginRepository {
     return LoginSucceeded(
       AuthSession(
         accessToken: 'fake.jwt.token',
-        expiresAtUtc: DateTime.now().toUtc(),
+        expiresAtUtc: DateTime.now().toUtc().add(const Duration(hours: 1)),
       ),
     );
   }
@@ -54,7 +55,7 @@ void main() {
       await tester.pumpWidget(
         BloodlineApp(
           loginRepository: repository,
-          sessionStore: sessionStore,
+          sessionCubit: SessionCubit(sessionStore),
         ),
       );
 
@@ -103,7 +104,7 @@ void main() {
     await tester.pumpWidget(
       BloodlineApp(
         loginRepository: repository,
-        sessionStore: sessionStore,
+        sessionCubit: SessionCubit(sessionStore),
       ),
     );
 
