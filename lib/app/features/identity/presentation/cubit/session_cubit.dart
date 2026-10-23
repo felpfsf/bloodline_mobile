@@ -89,6 +89,34 @@ final class SessionCubit extends Cubit<SessionState> {
     }
   }
 
+  Future<void> invalidateIfCurrentToken(String? requestToken) async {
+    if (isClosed) return;
+
+    try {
+      final currentSession = await _store.read();
+
+      if (currentSession == null) {
+        if (!isClosed) {
+          emit(const SessionUnauthenticated());
+        }
+
+        return;
+      }
+
+      if (requestToken == null || currentSession.accessToken != requestToken) {
+        return;
+      }
+
+      await _store.clear();
+
+      if (!isClosed) {
+        emit(const SessionUnauthenticated());
+      }
+    } catch (error, stackTrace) {
+      _handleStorageError(error, stackTrace);
+    }
+  }
+
   void _handleStorageError(
     Object error,
     StackTrace stackTrace,

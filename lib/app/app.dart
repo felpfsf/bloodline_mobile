@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloodline_mobile/app/features/identity/domain/repository/login_repository.dart';
-import 'package:bloodline_mobile/app/features/identity/domain/repository/session_store.dart';
 import 'package:bloodline_mobile/app/features/identity/presentation/cubit/session_cubit.dart';
 import 'package:bloodline_mobile/app/features/identity/presentation/cubit/session_state.dart';
 import 'package:bloodline_mobile/app/router/app_router.dart';
@@ -14,11 +13,11 @@ class BloodlineApp extends StatefulWidget {
   const BloodlineApp({
     super.key,
     required this.loginRepository,
-    required this.sessionStore,
+    required this.sessionCubit,
   });
 
   final ILoginRepository loginRepository;
-  final ISessionStore sessionStore;
+  final SessionCubit sessionCubit;
 
   @override
   State<BloodlineApp> createState() => _BloodlineAppState();
@@ -33,7 +32,7 @@ class _BloodlineAppState extends State<BloodlineApp> {
   void initState() {
     super.initState();
 
-    _sessionCubit = SessionCubit(widget.sessionStore);
+    _sessionCubit = widget.sessionCubit;
 
     _router = createAppRouter(
       loginRepository: widget.loginRepository,
