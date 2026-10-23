@@ -1,47 +1,10 @@
-import 'dart:typed_data';
-
 import 'package:bloodline_mobile/app/features/identity/data/interceptors/session_auth_interceptor.dart';
-import 'package:bloodline_mobile/app/features/identity/domain/models/auth_session.dart';
-import 'package:bloodline_mobile/app/features/identity/domain/repository/session_store.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-final class FakeSessionStore implements ISessionStore {
-  AuthSession? session;
-
-  @override
-  Future<void> clear() async {
-    session = null;
-  }
-
-  @override
-  Future<AuthSession?> read() async => session;
-
-  @override
-  Future<void> save(AuthSession session) async {
-    this.session = session;
-  }
-}
-
-final class FakeHttpClientAdapter implements HttpClientAdapter {
-  FakeHttpClientAdapter(this.statusCode);
-
-  final int statusCode;
-  RequestOptions? lastRequest;
-
-  @override
-  Future<ResponseBody> fetch(
-    RequestOptions options,
-    Stream<Uint8List>? requestStream,
-    Future<void>? cancelFuture,
-  ) async {
-    lastRequest = options;
-    return ResponseBody.fromString('{}', statusCode);
-  }
-
-  @override
-  void close({bool force = false}) {}
-}
+import '../../../../support/builders/auth_session_builder.dart';
+import '../../../../support/fakes/fake_http_client_adapter.dart';
+import '../../../../support/fakes/fake_session_store.dart';
 
 void main() {
   group('SessionAuthInterceptor', () {
@@ -63,17 +26,12 @@ void main() {
         );
     }
 
-    AuthSession sessionWith(String token) => AuthSession(
-      accessToken: token,
-      expiresAtUtc: DateTime.now().add(const Duration(hours: 1)),
-    );
-
     setUp(() {
       store = FakeSessionStore();
     });
 
     test('should attach bearer token on protected requests', () async {
-      store.session = sessionWith('valid.jwt.token');
+      store.session = buildAuthSession(accessToken: 'valid.jwt.token');
       setUpDio(statusCode: 200);
 
       await dio.get<dynamic>(
@@ -90,7 +48,7 @@ void main() {
     });
 
     test('should not attach token on public requests', () async {
-      store.session = sessionWith('valid.jwt.token');
+      store.session = buildAuthSession(accessToken: 'valid.jwt.token');
       setUpDio(statusCode: 200);
 
       await dio.get<dynamic>('/public');
@@ -99,7 +57,7 @@ void main() {
     });
 
     test('should notify unauthorized for protected HTTP 401', () async {
-      store.session = sessionWith('rejected.jwt.token');
+      store.session = buildAuthSession(accessToken: 'rejected.jwt.token');
       setUpDio(statusCode: 401);
 
       await expectLater(
