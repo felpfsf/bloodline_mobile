@@ -20,6 +20,8 @@ class _LoginPageState extends State<LoginPage> {
   final emailEC = TextEditingController();
   final passwordEC = TextEditingController();
 
+  bool _obscurePassword = true;
+
   String _messageFor(ApiFailureType type) {
     return switch (type) {
       ApiFailureType.unauthorized => 'E-mail ou senha inválidos',
@@ -54,6 +56,12 @@ class _LoginPageState extends State<LoginPage> {
     if (state is LoginSuccess) {
       unawaited(context.read<SessionCubit>().startSession(state.session));
     }
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscurePassword = !_obscurePassword;
+    });
   }
 
   @override
@@ -104,9 +112,17 @@ class _LoginPageState extends State<LoginPage> {
                           key: const ValueKey('login_password'),
                           controller: passwordEC,
                           enabled: !isLoading,
-                          obscureText: true,
-                          decoration: const InputDecoration(
+                          obscureText: _obscurePassword,
+                          decoration: InputDecoration(
                             labelText: 'Senha',
+                            suffixIcon: IconButton(
+                              onPressed: _togglePasswordVisibility,
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                            ),
                           ),
                           autofillHints: const [AutofillHints.password],
                           validator: (value) {
