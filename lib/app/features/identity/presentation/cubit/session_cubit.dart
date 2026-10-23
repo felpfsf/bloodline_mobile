@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 final class SessionCubit extends Cubit<SessionState> {
   SessionCubit(
-    this._store,
+    this._store, {
     DateTime Function()? now,
-  ) : _now = now ?? DateTime.now,
-      super(const SessionInitial());
+  }) : _now = now ?? DateTime.now,
+       super(const SessionInitial());
 
   final ISessionStore _store;
   final DateTime Function() _now;

@@ -1,6 +1,7 @@
 import 'package:bloodline_mobile/app/app.dart';
 import 'package:bloodline_mobile/app/features/identity/domain/models/auth_session.dart';
 import 'package:bloodline_mobile/app/features/identity/domain/repository/login_repository.dart';
+import 'package:bloodline_mobile/app/features/identity/domain/repository/session_store.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -25,14 +26,39 @@ final class FakeLoginRepository implements ILoginRepository {
   }
 }
 
+final class FakeSessionStore implements ISessionStore {
+  AuthSession? session;
+
+  @override
+  Future<void> clear() async {
+    session = null;
+  }
+
+  @override
+  Future<AuthSession?> read() async => session;
+
+  @override
+  Future<void> save(AuthSession session) async {
+    this.session = session;
+  }
+}
+
 void main() {
   testWidgets(
     'Should submit credentials through LoginCubit',
     (WidgetTester tester) async {
       // Arrange
       final repository = FakeLoginRepository();
+      final sessionStore = FakeSessionStore();
 
-      await tester.pumpWidget(BloodlineApp(loginRepository: repository));
+      await tester.pumpWidget(
+        BloodlineApp(
+          loginRepository: repository,
+          sessionStore: sessionStore,
+        ),
+      );
+
+      await tester.pumpAndSettle();
 
       await tester.tap(find.text('Entrar'));
       await tester.pumpAndSettle();
@@ -52,19 +78,50 @@ void main() {
         find.byKey(const Key('login_button')),
       );
 
-      await tester.pump();
-      await tester.pump(
-        const Duration(milliseconds: 300),
-      );
+      await tester.pumpAndSettle();
 
       // Assert
-      expect(repository.receivedEmail, 'test@example.com');
-      expect(repository.receivedPassword, 'password123');
+      expect(find.text('DASHBOARD EM CONSTRUÇÃO'), findsOneWidget);
 
       expect(
-        find.text('Login realizado com sucesso!'),
-        findsOneWidget,
+        sessionStore.session,
+        isNotNull,
       );
     },
   );
+
+  testWidgets('should return to welcome page on logout', (
+    WidgetTester tester,
+  ) async {
+    final repository = FakeLoginRepository();
+    final sessionStore = FakeSessionStore()
+      ..session = AuthSession(
+        accessToken: 'fake.jwt.token',
+        expiresAtUtc: DateTime.now().toUtc().add(const Duration(hours: 1)),
+      );
+
+    await tester.pumpWidget(
+      BloodlineApp(
+        loginRepository: repository,
+        sessionStore: sessionStore,
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('DASHBOARD EM CONSTRUÇÃO'),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text('Sair'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('PROJECT BLOODLINE'),
+      findsOneWidget,
+    );
+
+    expect(sessionStore.session, isNull);
+  });
 }

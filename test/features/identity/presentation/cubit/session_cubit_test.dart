@@ -45,7 +45,7 @@ void main() {
       'should restore as unauthenticated when no session exists',
       build: () => SessionCubit(
         FakeSessionStore(),
-        () => now,
+        now: () => now,
       ),
       act: (cubit) => cubit.restore(),
       expect: () => [
@@ -63,7 +63,7 @@ void main() {
             expiresAtUtc: now.add(const Duration(hours: 1)),
           ),
         ),
-        () => now,
+        now: () => now,
       ),
       act: (cubit) => cubit.restore(),
       expect: () => [
@@ -80,7 +80,7 @@ void main() {
       'should report unavailable session when storage fails',
       build: () => SessionCubit(
         FakeSessionStore(failOnRead: true),
-        () => now,
+        now: () => now,
       ),
       act: (cubit) => cubit.restore(),
       expect: () => [
@@ -102,7 +102,7 @@ void main() {
 
       final cubit = SessionCubit(
         store,
-        () => now,
+        now: () => now,
       );
 
       await cubit.restore();
@@ -115,7 +115,10 @@ void main() {
     test('should persist a session before authenticating', () async {
       final store = FakeSessionStore();
 
-      final cubit = SessionCubit(store, () => now);
+      final cubit = SessionCubit(
+        store,
+        now: () => now,
+      );
 
       addTearDown(cubit.close);
 
@@ -133,7 +136,10 @@ void main() {
     test('should clear the session on logout', () async {
       final store = FakeSessionStore();
 
-      final cubit = SessionCubit(store, () => now);
+      final cubit = SessionCubit(
+        store,
+        now: () => now,
+      );
 
       addTearDown(cubit.close);
 

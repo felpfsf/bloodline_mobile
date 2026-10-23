@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:bloodline_mobile/app/features/identity/presentation/cubit/login_cubit.dart';
 import 'package:bloodline_mobile/app/features/identity/presentation/cubit/login_state.dart';
+import 'package:bloodline_mobile/app/features/identity/presentation/cubit/session_cubit.dart';
 import 'package:bloodline_mobile/core/networking/api_failure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,11 +52,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     if (state is LoginSuccess) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login realizado com sucesso!'),
-        ),
-      );
+      unawaited(context.read<SessionCubit>().startSession(state.session));
     }
   }
 
