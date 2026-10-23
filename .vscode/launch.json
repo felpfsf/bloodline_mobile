@@ -6,15 +6,24 @@
   "configurations": [
     
     {
-      "name": "bloodline_mobile",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "bloodline_mobile (profile mode)",
+      "name": "Bloodline Dev - Android",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "flutterMode": "debug",
+      "program": "lib/main.dart",
+      "toolArgs": [
+        "--dart-define=API_BASE_URL=http://10.0.2.2:5226"
+      ]
+    },
+    {
+      "name": "Bloodline Dev - iOS",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "program": "lib/main.dart",
+      "toolArgs": [
+        "--dart-define=API_BASE_URL=http://localhost:5226"
+      ]
     },
     {
       "name": "bloodline_mobile (release mode)",
